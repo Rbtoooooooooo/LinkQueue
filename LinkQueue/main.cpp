@@ -28,6 +28,8 @@ typedef struct {
 void initLinkQueue(LinkQueue &q) {
     q.front = q.rear = (LinkNode*)malloc(sizeof(LinkNode));
     q.front->next = NULL;
+    q.front->data = 0;
+    printf("初始化完成！\n");
 }
 
 
@@ -38,20 +40,26 @@ void initLinkQueue(LinkQueue &q) {
  @return 空返回true，非空返回false；
  */
 bool isEmpty(LinkQueue &q) {
-    return q.front == q.rear;
+    if (q.rear == q.front) {
+        printf("队空\n");
+        return true;
+    }
+    return false;
 }
 
 /**
  入队
 
- @param l 队列的名称
+ @param q 队列的名称
  @param e 入队的元素
  */
-void enQueue(LinkQueue &l, int e) {
+void enQueue(LinkQueue &q, int e) {
     LinkNode *s = (LinkNode*)malloc(sizeof(LinkNode));
     s->data = e;
-    s->data = NULL;
-    l.rear = s;
+    s->next = NULL;
+    q.rear->next = s;
+    q.rear = s;
+    q.front->data++;
 }
 
 /**
@@ -69,15 +77,45 @@ bool deQueue(LinkQueue &q, int &e) {
     s = q.front->next;
     e = s->data;
     q.front->next = s->next;
+    q.front->data--;
     if (s == q.rear) {
         q.rear = q.front;
     }
+    
+    return true;
+}
+
+bool print(LinkQueue q) {
+    if (isEmpty(q)) {
+        return false;
+    }
+    printf("链队中共有%d个元素！\n", q.front->data);
+    LinkNode *s = (LinkNode*)malloc(sizeof(LinkNode));
+    s = q.front->next;
+    while (s!=NULL) {
+        printf("%d ", s->data);
+        s = s->next;
+    }
+    printf("\n");
     return true;
 }
 
 int main(int argc, const char * argv[]) {
     // insert code here...
 
+    LinkQueue q;
+    int e;
+    initLinkQueue(q);
+    enQueue(q, 1);
+    enQueue(q, 99);
+    print(q);
+    deQueue(q, e);
+    print(q);
+    deQueue(q, e);
+    print(q);
+    deQueue(q, e);
+    
+    
 //   小实验
 //    LinkNode *a, *b, *c;
 //    a=b=(LinkNode*)malloc(sizeof(LinkNode));  // a,b指向同一片空间，并未开辟两片空间
